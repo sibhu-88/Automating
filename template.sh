@@ -18,6 +18,7 @@ echo '}' >>$file.c
 echo '' >>$file.c
 echo '' >>$file.c
 echo '#####---------END-------######### ' >>$file.c
+nano $file.c
 
 #chmod 777 template
 #sudo mv template /bin/
