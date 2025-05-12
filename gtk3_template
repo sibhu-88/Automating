@@ -115,6 +115,12 @@ EOF
 
 cat > $PROJECT_NAME/README.md << 'EOF'
 # GTK3 Project Template
+
+# Update package lists
+sudo apt update
+# Install GTK3 development package and dependencies
+sudo apt install -y libgtk-3-dev build-essential pkg-config
+
 This is a template for creating GTK3 projects in C. It includes a basic structure with source files, header files, and a Makefile.
 ## Directory Structure
 - src: Contains the source code files.
