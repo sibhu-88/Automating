@@ -1,0 +1,160 @@
+#!/bin/bash
+
+# Usage: ./gtk3_template project-name
+# Example: ./gtk3_template text-editor
+
+if [ -z "$1" ]; then
+  echo "Please provide a project name."
+  exit 1
+fi
+
+PROJECT_NAME=$1
+
+# Create directories
+mkdir -p $PROJECT_NAME/{src,include,resources/css,resources/icons,build}
+
+# Create empty source files
+touch $PROJECT_NAME/src/main.c \
+      $PROJECT_NAME/src/editor.c \
+      $PROJECT_NAME/src/ui.c \
+      $PROJECT_NAME/src/callbacks.c \
+      $PROJECT_NAME/src/utils.c
+
+# Create empty header files
+touch $PROJECT_NAME/include/headers.h \
+      $PROJECT_NAME/include/editor.h \
+      $PROJECT_NAME/include/ui.h \
+      $PROJECT_NAME/include/callbacks.h \
+      $PROJECT_NAME/include/utils.h
+
+# Create resource files
+touch $PROJECT_NAME/resources/css/style.css
+
+# Create other project files
+touch $PROJECT_NAME/README.md \
+      $PROJECT_NAME/LICENSE
+
+cat > $PROJECT_NAME/include/headers.h << 'EOF'
+#ifndef HEADERS_H
+#define HEADERS_H
+#include <gtk/gtk.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#endif
+EOF
+
+# Create Makefile with provided content
+cat > $PROJECT_NAME/Makefile << 'EOF'
+CC = gcc
+CFLAGS = `pkg-config --cflags gtk+-3.0` -Iinclude
+LDFLAGS = `pkg-config --libs gtk+-3.0`
+SRC = $(wildcard src/*.c)
+TARGET = build/$(PROJECT_NAME)-app
+
+all: $(TARGET)
+
+$(TARGET): $(SRC)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+run: $(TARGET)
+	$(TARGET)
+
+clean:
+	rm -fr $(TARGET) src/*.o
+
+.PHONY: all clean run
+EOF
+
+# Create a simple CSS file
+cat > $PROJECT_NAME/resources/css/style.css << 'EOF'
+/* Basic CSS for GTK3 application */
+window {
+    background-color: #f0f0f0;
+}
+button {
+    background-color: #0078d7;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+button:hover {
+    background-color: #005bb5;
+}
+label {
+    font-size: 14px;
+    color: #333;
+}
+entry {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+}
+entry:focus {
+    border-color: #0078d7;
+}
+entry:disabled {
+    background-color: #e0e0e0;
+}
+entry:disabled:hover {
+    background-color: #e0e0e0;
+}
+
+
+/* Add more styles as needed */
+EOF
+
+# Create a simple icon file
+cat > $PROJECT_NAME/resources/icons/icon.png << 'EOF'
+/* Placeholder for icon file */
+/* You can replace this with an actual icon file */
+EOF
+
+
+cat > $PROJECT_NAME/README.md << 'EOF'
+# GTK3 Project Template
+This is a template for creating GTK3 projects in C. It includes a basic structure with source files, header files, and a Makefile.
+## Directory Structure
+- src: Contains the source code files.
+- include: Contains the header files.
+- resources: Contains CSS and icon files.
+- build: Contains the compiled binaries.
+## Build Instructions
+To build the project, navigate to the project directory and run:
+```bash
+make
+```
+To run the project, use:
+```bash
+make run
+```
+## Clean Instructions
+To clean the project, use:
+```bash
+make clean
+```
+EOF
+
+cat > $PROJECT_NAME/LICENSE << 'EOF'
+MIT License
+Copyright (c) 2023 Sibhu
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+
+echo "GTK3 project template created successfully in folder: $PROJECT_NAME"
